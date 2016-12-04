@@ -62,7 +62,7 @@ def log_to_csv(morning, evening):
             row = [str(morning.date()), morning_str, evening_str, str(delta.seconds/3600.0)]
         else:
             row = [str(morning.date()), morning_str, evening_str, '!' + str(delta.days)+'Days, ' + str(delta.seconds/3600.0)]
-        log_file_name = LOG_FILE + morning.month + '.' + morning.year + SUFFIX
+        log_file_name = LOG_FILE + str(morning.month) + '.' + str(morning.year) + SUFFIX
         is_first = not os.path.isfile(log_file_name)
         with open(log_file_name, 'a+', newline='') as log_file:
             time_logger = csv.writer(log_file)
