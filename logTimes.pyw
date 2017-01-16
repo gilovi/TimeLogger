@@ -4,6 +4,7 @@ import csv
 import pickle
 from datetime import datetime
 from time import sleep
+from random import random
 
 LOG_FILE = 'time_log'
 SUFFIX = '.csv'
@@ -62,14 +63,22 @@ def log_to_csv(morning, evening):
             row = [str(morning.date()), morning_str, evening_str, str(delta.seconds/3600.0)]
         else:
             row = [str(morning.date()), morning_str, evening_str, '!' + str(delta.days)+'Days, ' + str(delta.seconds/3600.0)]
-        log_file_name = LOG_FILE + str(morning.month) + '.' + str(morning.year) + SUFFIX
-        is_first = not os.path.isfile(log_file_name)
-        with open(log_file_name, 'a+', newline='') as log_file:
-            time_logger = csv.writer(log_file)
-            if is_first:
-                time_logger.writerow(['Date', 'Beginning time', 'End time', 'Total hours this day'])
-            time_logger.writerow(row)
-
+        log_file_name = LOG_FILE + str(morning.month) + '.' + str(morning.year) 
+        is_first = not os.path.isfile(log_file_name + SUFFIX)
+        try:
+            with open(log_file_name + SUFFIX, 'a+', newline='') as log_file:			
+                time_logger = csv.writer(log_file)
+                if is_first:
+                    time_logger.writerow(['Date', 'Beginning time', 'End time', 'Total hours this day'])
+                time_logger.writerow(row)
+        except PermissionError:
+            r = str(random()).split('.')[-1]
+            with open(log_file_name + '_' + r + SUFFIX, 'a+', newline='') as log_file:			
+                time_logger = csv.writer(log_file)
+                if is_first:
+                    time_logger.writerow(['Date', 'Beginning time', 'End time', 'Total hours this day'])
+                time_logger.writerow(row)
+			
 
 def main():
     while True:
